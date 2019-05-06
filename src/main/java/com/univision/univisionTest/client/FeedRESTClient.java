@@ -11,11 +11,9 @@ public class FeedRESTClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public FeedResponseDTO getFeeds() {
+    public FeedResponseDTO getFeeds(final String feedURI) {
 
-        String url = "https://syndicator.univision.com/web-api/content?url=https://www.univision.com&lazyload=false";
-
-        return restTemplate.getForObject(url, FeedResponseDTO.class);
+        return restTemplate.getForObject(feedURI, FeedResponseDTO.class);
 
     }
 

@@ -4,6 +4,6 @@ import com.univision.univisionTest.dto.FeedSummaryResponseDTO;
 
 public interface FeedService {
 
-    public FeedSummaryResponseDTO getFeedSummary();
+    public FeedSummaryResponseDTO getFeedSummary(final String feedURL);
 
 }

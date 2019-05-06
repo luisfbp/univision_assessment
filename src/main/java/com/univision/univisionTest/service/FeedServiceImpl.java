@@ -16,10 +16,12 @@ public class FeedServiceImpl implements FeedService {
     @Autowired
     private FeedRESTClient feedClient;
 
-    public FeedSummaryResponseDTO getFeedSummary() {
+    public FeedSummaryResponseDTO getFeedSummary(final String feedURL) {
 
         final FeedSummaryResponseDTO feedSummary = new FeedSummaryResponseDTO();
-        List<FeedSummaryDTO> feedsSummary = FeedMapper.contentDTOMapToFeedSummaryDTO(sortFeeds(feedClient.getFeeds().getData()));
+
+        Map<String, List<ContentDTO>> orderedFeed = sortFeeds(feedClient.getFeeds(feedURL).getData());
+        List<FeedSummaryDTO> feedsSummary = FeedMapper.contentDTOMapToFeedSummaryDTO(orderedFeed);
         feedSummary.setSummary(feedsSummary);
 
         return feedSummary;
@@ -36,8 +38,5 @@ public class FeedServiceImpl implements FeedService {
         return contents.stream().collect(Collectors.groupingBy(ContentDTO::getType));
 
     }
-
-
-
 
 }
