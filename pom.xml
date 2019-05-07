@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.univision</groupId>
-	<artifactId>univisionTest</artifactId>
+	<artifactId>UnivisionFeedAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>univisionBackendAssessment</name>
 	<description>Project to assess java developer </description>

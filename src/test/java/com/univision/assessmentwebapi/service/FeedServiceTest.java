@@ -4,7 +4,7 @@ import com.univision.assessmentwebapi.UnivisionTestApplicationTests;
 import com.univision.assessmentwebapi.client.FeedRESTClient;
 import com.univision.assessmentwebapi.dto.*;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,23 +43,23 @@ public class FeedServiceTest {
 
         FeedSummaryResponseDTO feedSummaryResponse = feedService.getFeedSummary("http://fake.url.com");
 
-        Assert.assertNotNull("Response cannot be null",feedSummaryResponse);
-        Assert.assertEquals("Must be 3 and only 3 types", 3, feedSummaryResponse.getSummary().size());
+        assertNotNull("Response cannot be null",feedSummaryResponse);
+        assertEquals("Must be 3 and only 3 types", 3, feedSummaryResponse.getSummary().size());
 
         FeedSummaryDTO summarySlideshow = findFeedSummaryDTOsByType("slideshow", feedSummaryResponse);
 
-        Assert.assertNotNull("Must exist slideshows types", summarySlideshow);
-        Assert.assertEquals("Must be only 2 contents with type slideshow", 2, summarySlideshow.getTitles().size());
+        assertNotNull("Must exist slideshows types", summarySlideshow);
+        assertEquals("Must be only 2 contents with type slideshow", 2, summarySlideshow.getTitles().size());
 
         FeedSummaryDTO summaryArticle = findFeedSummaryDTOsByType("article", feedSummaryResponse);
 
-        Assert.assertNotNull("Must exist articles types", summaryArticle);
-        Assert.assertEquals("Must be only 5 contents with type article", 5, summaryArticle.getTitles().size());
+        assertNotNull("Must exist articles types", summaryArticle);
+        assertEquals("Must be only 5 contents with type article", 5, summaryArticle.getTitles().size());
 
         FeedSummaryDTO summaryVideo = findFeedSummaryDTOsByType("video", feedSummaryResponse);
 
-        Assert.assertNotNull("Must exist a video type", summaryVideo);
-        Assert.assertEquals("Must be only a content with type video", 1, summaryVideo.getTitles().size());
+        assertNotNull("Must exist a video type", summaryVideo);
+        assertEquals("Must be only a content with type video", 1, summaryVideo.getTitles().size());
 
     }
 
