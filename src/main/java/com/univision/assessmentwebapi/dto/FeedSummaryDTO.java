@@ -1,4 +1,4 @@
-package com.univision.univisionTest.dto;
+package com.univision.assessmentwebapi.dto;
 
 import java.util.List;
 

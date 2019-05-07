@@ -1,4 +1,4 @@
-package com.univision.univisionTest.config;
+package com.univision.assessmentwebapi.config;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

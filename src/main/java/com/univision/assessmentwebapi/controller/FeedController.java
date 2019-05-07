@@ -1,7 +1,7 @@
-package com.univision.univisionTest.controller;
+package com.univision.assessmentwebapi.controller;
 
-import com.univision.univisionTest.dto.FeedSummaryResponseDTO;
-import com.univision.univisionTest.service.FeedService;
+import com.univision.assessmentwebapi.dto.FeedSummaryResponseDTO;
+import com.univision.assessmentwebapi.service.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class FeedController {
 
     @GetMapping("/summary")
     public ResponseEntity<FeedSummaryResponseDTO> parseFeed (@RequestParam String feedURI) {
-        return new ResponseEntity<>(feedService.getFeedSummary(feedURI), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(feedService.getFeedSummary(feedURI), HttpStatus.OK);
     }
 
 }

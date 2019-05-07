@@ -1,6 +1,6 @@
-package com.univision.univisionTest.client;
+package com.univision.assessmentwebapi.client;
 
-import com.univision.univisionTest.dto.FeedResponseDTO;
+import com.univision.assessmentwebapi.dto.FeedResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

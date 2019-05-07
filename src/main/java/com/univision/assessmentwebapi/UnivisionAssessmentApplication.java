@@ -1,4 +1,4 @@
-package com.univision.univisionTest;
+package com.univision.assessmentwebapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
