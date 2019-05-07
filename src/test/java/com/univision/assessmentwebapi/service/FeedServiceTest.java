@@ -1,10 +1,12 @@
 package com.univision.assessmentwebapi.service;
 
 import com.univision.assessmentwebapi.UnivisionTestApplicationTests;
-import com.univision.assessmentwebapi.client.FeedRESTClient;
+import com.univision.assessmentwebapi.client.GenericRESTClient;
 import com.univision.assessmentwebapi.dto.*;
 
 import static org.junit.Assert.*;
+
+import com.univision.assessmentwebapi.exception.APIThrowable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { UnivisionTestApplicationTests.class })
@@ -30,16 +32,17 @@ public class FeedServiceTest {
     private FeedService feedService;
 
     @MockBean
-    private FeedRESTClient feedRESTClient;
+    private GenericRESTClient genericRESTClient;
 
     @Before
     public void setUp () {
-        final FeedResponseDTO feedResponseDTO = stubFeedSummaryResponseDTO();
-        Mockito.when(feedRESTClient.getFeeds(anyString())).thenReturn(feedResponseDTO);
     }
 
     @Test
     public void getFeedSummaryTest_success() {
+
+        final FeedResponseDTO feedResponseDTO = stubFeedSummaryResponseDTO();
+        Mockito.when(genericRESTClient.getRequest(anyString(), eq(FeedResponseDTO.class))).thenReturn(feedResponseDTO);
 
         FeedSummaryResponseDTO feedSummaryResponse = feedService.getFeedSummary("http://fake.url.com");
 
@@ -60,6 +63,30 @@ public class FeedServiceTest {
 
         assertNotNull("Must exist a video type", summaryVideo);
         assertEquals("Must be only a content with type video", 1, summaryVideo.getTitles().size());
+
+    }
+
+    @Test(expected = APIThrowable.class)
+    public void getFeedSummaryTest_nullFeedURI() {
+
+        Mockito.when(genericRESTClient.getRequest(null, FeedResponseDTO.class)).thenThrow(APIThrowable.class);
+        feedService.getFeedSummary("http://fake.url.com");
+
+    }
+
+    @Test(expected = APIThrowable.class)
+    public void getFeedSummaryTest_feedResponseNull() {
+
+        Mockito.when(genericRESTClient.getRequest(anyString(), eq(FeedResponseDTO.class))).thenReturn(null);
+        feedService.getFeedSummary("http://fake.url.com");
+
+    }
+
+    @Test(expected = APIThrowable.class)
+    public void getFeedSummaryTest_feedResponseEmpty() {
+
+        Mockito.when(genericRESTClient.getRequest(anyString(), eq(FeedResponseDTO.class))).thenReturn(new FeedResponseDTO());
+        feedService.getFeedSummary("http://fake.url.com");
 
     }
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Objects;
+
 /**
  * Intercept all the exceptions in the API
  */
@@ -37,7 +39,9 @@ public class RestExceptionHandler {
     @ExceptionHandler(APIThrowable.class)
     public ResponseEntity<APIError> exception (APIThrowable ex) {
 
-        logger.error("Error threw: {}" , ex.getErrorMessage().toString());
+        if (Objects.nonNull(ex) && Objects.nonNull(ex.getErrorMessage())) {
+            logger.error("Error threw: {}" , ex.getErrorMessage().toString());
+        }
 
         return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

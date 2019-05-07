@@ -1,9 +1,11 @@
 package com.univision.assessmentwebapi.service;
 
-import com.univision.assessmentwebapi.client.FeedRESTClient;
+import com.univision.assessmentwebapi.client.GenericRESTClient;
 import com.univision.assessmentwebapi.dto.*;
+import com.univision.assessmentwebapi.exception.APIThrowable;
 import com.univision.assessmentwebapi.mapper.FeedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
 public class FeedServiceImpl implements FeedService {
 
     @Autowired
-    private FeedRESTClient feedClient;
+    private GenericRESTClient genericClient;
 
     /**
      * Creates a summary of the provided feed
@@ -25,9 +27,14 @@ public class FeedServiceImpl implements FeedService {
 
         final FeedSummaryResponseDTO feedSummary = new FeedSummaryResponseDTO();
 
-        Map<String, List<ContentDTO>> orderedFeed = groupFeedsByType(feedClient.getFeeds(feedURL).getData());
-        List<FeedSummaryDTO> feedsSummary = FeedMapper.contentDTOMapToFeedSummaryDTOList(orderedFeed);
-        feedSummary.setSummary(feedsSummary);
+        FeedResponseDTO feedResponse = genericClient.getRequest(feedURL, FeedResponseDTO.class);
+        if (Objects.isNull(feedResponse) || Objects.isNull(feedResponse.getData())) {
+            throw new APIThrowable(HttpStatus.NOT_FOUND, "No data returned with given feed URL");
+        }
+
+        Map<String, List<ContentDTO>> orderedFeed = groupFeedsByType(feedResponse.getData());
+
+        feedSummary.setSummary(FeedMapper.contentDTOMapToFeedSummaryDTOList(orderedFeed));
 
         return feedSummary;
 
@@ -40,15 +47,17 @@ public class FeedServiceImpl implements FeedService {
      */
     private Map<String, List<ContentDTO>> groupFeedsByType(final FeedDataDTO feedData) {
 
-        // Flats the lists to one from every widgets list
-        List<ContentDTO> contents = feedData.getWidgets().stream()
-                // Filter the lists that are empty
-                .filter(widget -> !CollectionUtils.isEmpty(widget.getContents()))
-                .map(WidgetDTO::getContents)
-                .flatMap(List::stream).collect(Collectors.toList());
+        if (Objects.nonNull(feedData) && !CollectionUtils.isEmpty(feedData.getWidgets())) {
+            // Flats the lists to one from every widgets list
+            List<ContentDTO> contents = feedData.getWidgets().stream()
+                    // Filter the lists that are empty
+                    .filter(widget -> !CollectionUtils.isEmpty(widget.getContents()))
+                    .map(WidgetDTO::getContents)
+                    .flatMap(List::stream).collect(Collectors.toList());
 
-        return contents.stream().collect(Collectors.groupingBy(ContentDTO::getType));
-
+            return contents.stream().collect(Collectors.groupingBy(ContentDTO::getType));
+        }
+        return Collections.emptyMap();
     }
 
 }

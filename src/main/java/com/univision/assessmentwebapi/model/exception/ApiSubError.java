@@ -1,6 +1,8 @@
 package com.univision.assessmentwebapi.model.exception;
 
-public class ApiSubError {
+import java.io.Serializable;
+
+public class ApiSubError implements Serializable {
 
     private String object;
     private String field;
